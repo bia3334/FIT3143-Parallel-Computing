@@ -24,11 +24,22 @@ int main() {
     int n, num_threads;
     printf("Enter n: ");
     scanf("%d", &n);
-    printf("Enter number of threads: ");
-    scanf("%d", &num_threads);
-
+    
     int cores = sysconf(_SC_NPROCESSORS_ONLN);
     printf("Available CPU cores: %d\n", cores);
+    
+    printf("Enter number of threads (max %d): ", cores);
+    scanf("%d", &num_threads);
+    
+    // Validate and limit thread count
+    if (num_threads <= 0) {
+        printf("Invalid thread count. Using 1 thread.\n");
+        num_threads = 1;
+    } else if (num_threads > cores) {
+        printf("Thread count exceeds available cores. Limiting to %d threads.\n", cores);
+        num_threads = cores;
+    }
+    printf("Using %d threads\n", num_threads);
 
     // Set the number of threads for OpenMP
     omp_set_num_threads(num_threads);
