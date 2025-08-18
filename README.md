@@ -9,7 +9,7 @@ This repository contains practical implementations exploring various parallel co
 
 **Course:** FIT3143 - Parallel Computing  
 **Institution:** Monash University  
-**Academic Year:** [Current Year]
+**Academic Year:** S2-2025
 
 ## 🗂️ Project Structure
 
