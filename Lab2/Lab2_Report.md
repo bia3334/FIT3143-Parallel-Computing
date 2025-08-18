@@ -1,10 +1,10 @@
 # FIT3143 Lab 2 Report: Threads & OpenMP
 ## Finding Prime Numbers with Parallel Computing
 
-**Student Name:** [Your Name]  
-**Student ID:** [Your ID]  
-**Email:** [Your Email]@student.monash.edu  
-**Date:** [Current Date]
+**Student Name:** Tien Hung Nguyen  
+**Student ID:** 35499435
+**Email:** tngu0534@student.monash.edu  
+**Date:** 18/8/2025
 
 ---
 

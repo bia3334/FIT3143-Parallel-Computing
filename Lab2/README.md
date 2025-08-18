@@ -151,7 +151,7 @@ Educational use only - Monash University FIT3143
 
 ---
 
-**Author:** [Your Name]  
-**Student ID:** [Your ID]  
+**Author:** Tien Hung Nguyen
+**Student ID:** 35499435
 **Course:** FIT3143 - Parallel Computing  
 **Institution:** Monash University
