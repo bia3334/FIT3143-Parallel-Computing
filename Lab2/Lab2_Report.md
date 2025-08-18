@@ -13,10 +13,12 @@
 This report presents a comparative analysis of parallel computing approaches for finding prime numbers using POSIX Threads and OpenMP. The study evaluates performance, scalability, and implementation efficiency across different thread configurations on a system with 20 available CPU cores.
 
 **Key Findings:**
-- OpenMP demonstrates superior performance with up to 3.00x speedup
+- OpenMP demonstrates exceptional performance with up to 5.45x speedup (n=10,000,000)
 - POSIX Threads implementation shows performance degradation in all test cases
 - Optimal performance achieved with 8 threads using OpenMP
 - Dynamic scheduling significantly outperforms static partitioning
+- Larger datasets (n=10M) show much better parallelization efficiency than smaller ones
+- Thread validation prevents over-subscription and maintains system stability
 
 ---
 
@@ -29,10 +31,13 @@ This report presents a comparative analysis of parallel computing approaches for
 - Evaluate the effectiveness of task distribution strategies
 
 ### 1.2 Problem Statement
-Find all prime numbers strictly less than integer n (n = 1,000,000) using:
+Find all prime numbers strictly less than integer n (n = 10,000,000) using:
 1. Serial implementation (baseline)
 2. POSIX Threads parallel implementation
 3. OpenMP parallel implementation
+
+**Thread Management Enhancement:**
+All parallel implementations include thread count validation to prevent over-subscription and ensure optimal resource utilization within available CPU core limits.
 
 ### 1.3 System Specifications
 - **CPU Cores:** 20 available cores
@@ -504,17 +509,17 @@ int main() {
 
 ## 3. Performance Results
 
-### 3.1 Experimental Data
+### 3.1 Experimental Data (n = 10,000,000)
 
 | Method | Threads | Time (s) | Speed-up | Efficiency |
 |--------|---------|----------|----------|------------|
-| **Serial** | 1 | 0.0723 | 1.00x | 100% |
-| **POSIX Threads** | 4 | 0.1169 | 0.62x | 15.5% |
-| **POSIX Threads** | 8 | 0.1109 | 0.65x | 8.1% |
-| **POSIX Threads** | 16 | 0.1595 | 0.45x | 2.8% |
-| **OpenMP** | 4 | 0.0341 | 2.12x | 53% |
-| **OpenMP** | 8 | 0.0241 | 3.00x | 37.5% |
-| **OpenMP** | 16 | 0.0653 | 1.11x | 6.9% |
+| **Serial** | 1 | 2.3526 | 1.00x | 100% |
+| **POSIX Threads** | 4 | 2.8029 | 0.84x | 21.0% |
+| **POSIX Threads** | 8 | 3.0305 | 0.78x | 9.8% |
+| **POSIX Threads** | 16 | 4.7228 | 0.50x | 3.1% |
+| **OpenMP** | 4 | 0.7504 | 3.13x | 78.3% |
+| **OpenMP** | 8 | 0.4314 | 5.45x | 68.1% |
+| **OpenMP** | 16 | 0.4920 | 4.78x | 29.9% |
 
 **Speed-up Formula:** Speed-up = T_serial / T_parallel  
 **Efficiency Formula:** Efficiency = Speed-up / Number_of_threads × 100%
@@ -524,12 +529,15 @@ int main() {
 #### 3.2.1 POSIX Threads Results
 - **All configurations slower than serial implementation**
 - **Performance degradation increases with thread count**
-- **Maximum slowdown: 2.2x with 16 threads (0.45x speed-up)**
+- **Maximum slowdown: 2.0x with 16 threads (0.50x speed-up)**
+- **Slight improvement with larger dataset (better than previous n=1M results)**
+- **Best POSIX performance: 4 threads with 0.84x speed-up (still slower)**
 
 #### 3.2.2 OpenMP Results
-- **Consistent performance improvements across all thread counts**
-- **Peak performance: 3.00x speedup with 8 threads**
-- **Diminishing returns beyond 8 threads**
+- **Excellent performance improvements across all thread counts**
+- **Peak performance: 5.45x speedup with 8 threads (significantly improved!)**
+- **Strong performance even with 16 threads: 4.78x speedup**
+- **Much better scaling with larger dataset (n=10M vs n=1M)**
 
 ---
 
@@ -540,12 +548,12 @@ int main() {
 #### 4.1.1 Speed-up Analysis
 **Q: What is the speed-up? Is it reasonable?**
 
-The POSIX Threads implementation shows **negative speed-up** across all configurations:
-- 4 threads: 0.62x (38% slower)
-- 8 threads: 0.65x (35% slower)  
-- 16 threads: 0.45x (55% slower)
+The POSIX Threads implementation shows **negative speed-up** across all configurations with n=10,000,000:
+- 4 threads: 0.84x (16% slower)
+- 8 threads: 0.78x (22% slower)
+- 16 threads: 0.50x (50% slower)
 
-**This is not reasonable** and indicates fundamental implementation issues.
+**This is still not reasonable** but shows **significant improvement** with larger datasets. The overhead is becoming less dominant as computational work increases.
 
 #### 4.1.2 Scalability Analysis
 **Q: How does speed-up change when increasing/decreasing threads?**
@@ -605,12 +613,12 @@ Thread 3: [750,000 - 1,000,000] → ~9,000 primes, slowest
 #### 4.2.1 Speed-up Analysis
 **Q: What is the speed-up? Is it reasonable?**
 
-OpenMP demonstrates **excellent speed-up** characteristics:
-- 4 threads: 2.12x speedup (reasonable)
-- 8 threads: 3.00x speedup (excellent)
-- 16 threads: 1.11x speedup (positive but diminished)
+OpenMP demonstrates **outstanding speed-up** characteristics with n=10,000,000:
+- 4 threads: 3.13x speedup (excellent - much improved from 2.12x)
+- 8 threads: 5.45x speedup (exceptional - nearly doubled from 3.00x)
+- 16 threads: 4.78x speedup (very good - dramatically improved from 1.11x)
 
-**This is very reasonable** and demonstrates effective parallelization.
+**This is exceptional** and shows that OpenMP scales much better with larger computational workloads. The larger dataset allows better amortization of parallelization overhead.
 
 #### 4.2.2 Scalability Analysis
 **Q: How does speed-up change with different thread counts?**
@@ -644,12 +652,14 @@ The dynamic scheduling approach is **highly efficient:**
 
 ### 5.1 Performance Comparison
 
-**Performance Ranking:**
-1. 🥇 **OpenMP with 8 threads:** 3.00x speedup (Best)
-2. 🥈 **OpenMP with 4 threads:** 2.12x speedup (Very Good)
-3. 🥉 **OpenMP with 16 threads:** 1.11x speedup (Good)
+**Performance Ranking (n = 10,000,000):**
+1. 🥇 **OpenMP with 8 threads:** 5.45x speedup (Exceptional)
+2. 🥈 **OpenMP with 16 threads:** 4.78x speedup (Excellent)
+3. 🥉 **OpenMP with 4 threads:** 3.13x speedup (Very Good)
 4. **Serial implementation:** 1.00x baseline
-5. **POSIX Threads (all configs):** 0.45x - 0.65x (Poor)
+5. **POSIX Threads with 4 threads:** 0.84x (Best of POSIX, still slower)
+6. **POSIX Threads with 8 threads:** 0.78x (Poor)
+7. **POSIX Threads with 16 threads:** 0.50x (Very Poor)
 
 ### 5.2 Key Insights
 
@@ -719,26 +729,32 @@ The dynamic scheduling approach is **highly efficient:**
 - Output files: `primes_serial.txt`, `primes_parallel.txt`, `primes_openmp.txt`
 
 ### 7.3 Verification
-All implementations correctly identify **78,498 prime numbers** less than 1,000,000, ensuring algorithmic correctness across all approaches.
+All implementations correctly identify **664,579 prime numbers** less than 10,000,000, ensuring algorithmic correctness across all approaches.
 
 ---
 
 ## Appendix A: Performance Charts
 
 ```
-Speed-up Comparison Chart:
+Speed-up Comparison Chart (n = 10,000,000):
 
 OpenMP Performance:
-4 threads  ████████████████████ 2.12x
-8 threads  ██████████████████████████████ 3.00x
-16 threads ███████████ 1.11x
+4 threads  ███████████████████████████████ 3.13x
+8 threads  ████████████████████████████████████████████████████ 5.45x
+16 threads ███████████████████████████████████████████████ 4.78x
 
 POSIX Threads Performance:
-4 threads  ██████ 0.62x (slower)
-8 threads  ██████ 0.65x (slower)
-16 threads ████ 0.45x (slower)
+4 threads  ████████ 0.84x (slower)
+8 threads  ████████ 0.78x (slower)
+16 threads █████ 0.50x (slower)
 
 Serial Baseline: ████████████ 1.00x
+
+Key Insights:
+- OpenMP achieves exceptional 5.45x speedup with 8 threads
+- Larger datasets significantly improve OpenMP efficiency
+- POSIX Threads still underperform but show improvement
+- Thread validation prevents over-subscription
 ```
 
 ---
