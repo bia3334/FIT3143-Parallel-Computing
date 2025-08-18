@@ -52,9 +52,11 @@ int main() {
 
     clock_t start = clock();
 
-    int range = n / num_threads;
+    // Start from 2 (first prime) and distribute range
+    int total_range = n - 2;
+    int range = total_range / num_threads;
     for (int t = 0; t < num_threads; t++) {
-        int start_num = t * range;
+        int start_num = 2 + t * range;
         int end_num = (t == num_threads - 1) ? n : start_num + range;
         all_primes[t] = malloc(range * sizeof(int)); // over-allocate
         counts[t] = 0;
@@ -68,6 +70,12 @@ int main() {
 
     clock_t end = clock();
     double elapsed_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+    // Calculate total count
+    int total_primes = 0;
+    for (int t = 0; t < num_threads; t++) {
+        total_primes += counts[t];
+    }
 
     // Merge results in ascending order (already sorted per thread)
     FILE *outfile = fopen("primes_parallel.txt", "w");
@@ -84,6 +92,7 @@ int main() {
     fclose(outfile);
 
     printf("Time taken (parallel): %.4f seconds\n", elapsed_time);
+    printf("Total primes found: %d\n", total_primes);
     printf("Primes written to primes_parallel.txt\n");
 
     return 0;

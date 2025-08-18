@@ -44,22 +44,32 @@ int main() {
     clock_t end = clock();
     double elapsed_time = ((double)(end - start)) / CLOCKS_PER_SEC;
 
-    // Write results to file
-    FILE *outfile = fopen("primes_serial.txt", "w");
-    if (!outfile) {
-        perror("File opening failed");
-        free(primes);
-        return EXIT_FAILURE;
-    }
+    // For small n, print to console; for large n, write to file
+    if (n <= 1000000) {
+        printf("Prime numbers less than %d: ", n);
+        for (int i = 0; i < count; i++) {
+            printf("%d", primes[i]);
+            if (i < count - 1) printf(", ");
+        }
+        printf("\n");
+    } else {
+        // Write results to file for large n
+        FILE *outfile = fopen("primes_serial.txt", "w");
+        if (!outfile) {
+            perror("File opening failed");
+            free(primes);
+            return EXIT_FAILURE;
+        }
 
-    for (int i = 0; i < count; i++) {
-        fprintf(outfile, "%d\n", primes[i]);
+        for (int i = 0; i < count; i++) {
+            fprintf(outfile, "%d\n", primes[i]);
+        }
+        fclose(outfile);
+        printf("Primes written to primes_serial.txt\n");
     }
-    fclose(outfile);
 
     printf("Time taken (serial): %.4f seconds\n", elapsed_time);
     printf("Total primes found: %d\n", count);
-    printf("Primes written to primes_serial.txt\n");
 
     free(primes);
     return 0;
