@@ -22,7 +22,6 @@ int main(int argc, char* argv[])
     
     // Root process prompts for N value
     if (rank == 0) {
-        printf("Enter the value of N (e.g., 100000000): ");
         fflush(stdout);
         scanf("%ld", &N);
     }

@@ -88,23 +88,45 @@ int main() {
         total_primes += counts[t];
     }
 
-    // Merge results in ascending order (already sorted per thread)
-    FILE *outfile = fopen("primes_parallel.txt", "w");
-    if (!outfile) {
-        perror("File opening failed");
-        return EXIT_FAILURE;
-    }
-    for (int t = 0; t < num_threads; t++) {
-        for (int i = 0; i < counts[t]; i++) {
-            fprintf(outfile, "%d\n", all_primes[t][i]);
+    // For small n, print to console; for large n, write to file
+    if (n <= 1000000) {
+        printf("Prime numbers less than %d: ", n);
+        // Print results from all threads in order
+        int first = 1;
+        for (int t = 0; t < num_threads; t++) {
+            for (int i = 0; i < counts[t]; i++) {
+                if (!first) printf(", ");
+                printf("%d", all_primes[t][i]);
+                first = 0;
+            }
         }
+        printf("\n");
+    } else {
+        // Write results to file for large n
+        FILE *outfile = fopen("primes_parallel.txt", "w");
+        if (!outfile) {
+            perror("File opening failed");
+            for (int t = 0; t < num_threads; t++) {
+                free(all_primes[t]);
+            }
+            return EXIT_FAILURE;
+        }
+        for (int t = 0; t < num_threads; t++) {
+            for (int i = 0; i < counts[t]; i++) {
+                fprintf(outfile, "%d\n", all_primes[t][i]);
+            }
+        }
+        fclose(outfile);
+        printf("Primes written to primes_parallel.txt\n");
+    }
+
+    // Free memory
+    for (int t = 0; t < num_threads; t++) {
         free(all_primes[t]);
     }
-    fclose(outfile);
 
     printf("Time taken (parallel): %.4f seconds\n", elapsed_time);
     printf("Total primes found: %d\n", total_primes);
-    printf("Primes written to primes_parallel.txt\n");
 
     return 0;
 }

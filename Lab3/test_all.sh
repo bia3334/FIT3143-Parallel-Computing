@@ -31,11 +31,17 @@ echo
 
 # Test Serial Pi
 echo "6. Testing Serial Pi calculation:"
+echo "   - N=100000"
+echo "100000" | ./serial_pi
+echo "   - N=1000000"
 echo "1000000" | ./serial_pi
 echo
 
 # Test Parallel Pi
 echo "7. Testing Parallel Pi calculation (4 processes):"
+echo "   - N=100000"
+echo "100000" | mpirun -np 4 task5
+echo "   - N=1000000"
 echo "1000000" | mpirun -np 4 task5
 echo
 
