@@ -511,15 +511,15 @@ int main() {
 
 ### 3.1 Experimental Data (n = 10,000,000)
 
-| Method | Threads | Time (s) | Speed-up | Efficiency |
-|--------|---------|----------|----------|------------|
-| **Serial** | 1 | 2.3526 | 1.00x | 100% |
-| **POSIX Threads** | 4 | 2.8029 | 0.84x | 21.0% |
-| **POSIX Threads** | 8 | 3.0305 | 0.78x | 9.8% |
-| **POSIX Threads** | 16 | 4.7228 | 0.50x | 3.1% |
-| **OpenMP** | 4 | 0.7504 | 3.13x | 78.3% |
-| **OpenMP** | 8 | 0.4314 | 5.45x | 68.1% |
-| **OpenMP** | 16 | 0.4920 | 4.78x | 29.9% |
+| Method            | Threads | Time (s) | Speed-up | Efficiency |
+|-------------------|---------|----------|----------|------------|
+| **Serial**        | 1       | 2.3526   | 1.00x    | 100%       |
+| **POSIX Threads** | 4       | 2.8029   | 0.84x    | 21.0%      |
+| **POSIX Threads** | 8       | 3.0305   | 0.78x    | 9.8%       |
+| **POSIX Threads** | 16      | 4.7228   | 0.50x    | 3.1%       |
+| **OpenMP**        | 4       | 0.7504   | 3.13x    | 78.3%      |
+| **OpenMP**        | 8       | 0.4314   | 5.45x    | 68.1%      |
+| **OpenMP**        | 16      | 0.4920   | 4.78x    | 29.9%      |
 
 **Speed-up Formula:** Speed-up = T_serial / T_parallel  
 **Efficiency Formula:** Efficiency = Speed-up / Number_of_threads × 100%

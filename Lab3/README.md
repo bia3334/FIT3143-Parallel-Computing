@@ -1,7 +1,7 @@
 # FIT3143 Lab 3 - Message Passing Interface (MPI)
 
 ## Student Information
-- **Name**: [Your Name]
+- **Name**: [Tien]
 - **ID**: [Your Student ID]
 - **Email**: [Your Monash Email]
 

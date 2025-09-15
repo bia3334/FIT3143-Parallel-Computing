@@ -35,7 +35,19 @@ FIT3143-Parallel-Computing/
 │   ├── serial_pi.c             # Serial Pi for comparison
 │   ├── Makefile                # Build configuration
 │   └── compiled executables
-├── Lab4/                        # 🚧 [Future Lab - TBD]
+├── Lab4/                        # ✅ MPI Prime Search & CAAS Cluster
+│   ├── LAB4_FINAL_REPORT.md    # Comprehensive final report
+│   ├── CoreTask/               # Local machine MPI implementation
+│   │   ├── mpi_prime.c         # MPI prime search algorithm
+│   │   ├── serial_prime.c      # Serial baseline for comparison
+│   │   ├── Makefile            # Build configuration
+│   │   ├── performance_analysis.sh # Automated benchmarking
+│   │   └── theoretical_analysis.md # Amdahl's Law analysis
+│   └── CAAS/                   # Cluster computing extended task
+│       ├── *_caas.c            # Cluster-adapted implementations
+│       ├── job_*.slurm         # SLURM job scripts
+│       ├── *_results.out       # Cluster execution results
+│       └── CAAS_PERFORMANCE_ANALYSIS.md # Cluster analysis
 └── Lab5/                        # 🚧 [Future Lab - TBD]
 ```
 
@@ -79,11 +91,27 @@ FIT3143-Parallel-Computing/
 
 [📖 View Lab 3 Details →](./Lab3/README.md)
 
-## 🚧 Upcoming Labs
+### Lab 4: MPI Prime Search & CAAS Cluster Computing ✅
+**Status:** Completed  
+**Focus:** Advanced MPI implementation and cluster performance analysis
 
-### Lab 4: [Topic TBD]
-**Status:** Pending  
-**Expected Focus:** [Will be updated when lab content is available]
+**Implementations:**
+- MPI prime search with cyclic workload distribution
+- Serial baseline for performance comparison
+- CAAS cluster deployment (Serial, OpenMP, MPI configurations)
+- Theoretical speedup analysis using Amdahl's Law with fabric time
+
+**Key Results:**
+- **Local Machine MPI:** 0.09x speedup (poor due to communication overhead)
+- **CAAS OpenMP:** 9.26x speedup with 16 threads (excellent scaling)
+- **CAAS vs Local:** 4x slower per-core but 2-4x more cores available
+- **Problem Size Impact:** Small problems favor shared memory over distributed memory
+
+**Files:** `mpi_prime.c`, `serial_prime.c`, CAAS job scripts, comprehensive performance analysis
+
+[📖 View Lab 4 Details →](./Lab4/LAB4_FINAL_REPORT.md)
+
+## 🚧 Upcoming Labs
 
 ### Lab 5: [Topic TBD]
 **Status:** Pending  
@@ -96,19 +124,23 @@ Throughout this course, the following parallel computing concepts are explored:
 ### Core Concepts
 - **Threading Models:** POSIX Threads vs OpenMP
 - **Message Passing:** MPI communication patterns and collective operations
+- **Distributed Computing:** Cluster computing with CAAS platform
 - **Performance Analysis:** Speed-up, efficiency, scalability metrics
-- **Load Balancing:** Static vs dynamic task distribution
+- **Load Balancing:** Static vs dynamic task distribution, cyclic distribution
 - **Memory Management:** Shared vs distributed memory architectures
 - **Synchronization:** Critical sections, race conditions, deadlocks
 - **Data Distribution:** Point-to-point vs collective communication strategies
+- **Fabric Time:** Communication overhead in distributed systems
 
 ### Technical Skills
 - **Algorithm Parallelization:** Converting serial to parallel algorithms
 - **MPI Programming:** Distributed computing with message passing
+- **Cluster Computing:** SLURM job scheduling, multi-node deployment
 - **Communication Optimization:** Choosing efficient MPI operations
 - **Performance Profiling:** Timing, bottleneck identification
 - **Optimization Techniques:** Cache locality, NUMA awareness
 - **Comparative Analysis:** Multi-approach evaluation methodology
+- **Theoretical Analysis:** Amdahl's Law, Gustafson's Law, fabric time modeling
 
 ## 🔧 Development Environment
 
@@ -182,13 +214,18 @@ mpicc -O3 -o program program.c -lm
 - **Exceptional speedup results** (250x) due to cache effects and memory bandwidth utilization
 - **Domain decomposition** scales effectively for numerical integration problems
 
-*[Additional findings will be added as more labs are completed]*
+### Lab 4 Highlights
+- **Problem size critically affects MPI performance** - small problems favor shared memory
+- **CAAS cluster provides excellent OpenMP scaling** (9.26x speedup @ 16 threads)
+- **Communication overhead dominates MPI** for prime search (n=1M)
+- **Cluster per-core performance differs significantly** from local machines (4x slower)
+- **Theoretical vs actual performance** - fabric time must be considered
 
 ## 📈 Course Progress
 
 - [x] **Lab 2:** Threads & OpenMP (Completed)
 - [x] **Lab 3:** Message Passing Interface (Completed)
-- [ ] **Lab 4:** [Pending]
+- [x] **Lab 4:** MPI Prime Search & CAAS Cluster (Completed)
 - [ ] **Lab 5:** [Pending]
 
 ## 🔗 Quick Navigation
@@ -197,7 +234,7 @@ mpicc -O3 -o program program.c -lm
 |-----|-------|--------|-----------|----------------------|
 | [Lab 2](./Lab2/) | Threads & OpenMP | ✅ Complete | `task1.c`, `task2.c`, `task3.c` | 3.00x speedup (OpenMP) |
 | [Lab 3](./Lab3/) | Message Passing Interface | ✅ Complete | `helloworld.c`, `task2a.c`, `task2b.c`, `task3.c`, `task4.c`, `task5.c` | 250.4x speedup (MPI Pi calc) |
-| Lab 4 | TBD | 🚧 Pending | - | - |
+| [Lab 4](./Lab4/) | MPI Prime Search & CAAS | ✅ Complete | `mpi_prime.c`, `serial_prime.c`, CAAS jobs | 9.26x speedup (CAAS OpenMP) |
 | Lab 5 | TBD | 🚧 Pending | - | - |
 
 ## 📝 Documentation Standards
@@ -230,5 +267,5 @@ Educational use only - Monash University FIT3143 Course Material
 
 ---
 
-**Last Updated:** January 2025  
-**Repository Status:** Active Development (Labs 2-3 Complete, Labs 4-5 Pending)
+**Last Updated:** September 2025  
+**Repository Status:** Active Development (Labs 2-4 Complete, Lab 5 Pending)
